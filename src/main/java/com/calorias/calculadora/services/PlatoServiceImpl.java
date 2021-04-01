@@ -2,6 +2,7 @@ package com.calorias.calculadora.services;
 
 import com.calorias.calculadora.dto.IngredienteDTO;
 import com.calorias.calculadora.dto.PlatoDTO;
+import com.calorias.calculadora.exceptionhandler.IngredientNotFound;
 import com.calorias.calculadora.repositories.IngredienteRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class PlatoServiceImpl implements MenuService {
     }
 
     @Override
-    public PlatoDTO calcularCalorias(PlatoDTO plato) {
+    public PlatoDTO calcularCalorias(PlatoDTO plato) throws IngredientNotFound {
         this.ingrediente.getIngredientes(plato.getIngredients());
         Double caloreias = 0.0;
         IngredienteDTO moreCaloriesIngredient = null;
@@ -32,7 +33,7 @@ public class PlatoServiceImpl implements MenuService {
         return plato;
     }
 
-    public List<PlatoDTO> calcularCaloriasMenu(List<PlatoDTO> platos) {
+    public List<PlatoDTO> calcularCaloriasMenu(List<PlatoDTO> platos) throws IngredientNotFound {
         for (int i = 0; i < platos.size(); i++) {
             calcularCalorias(platos.get(i));
         }

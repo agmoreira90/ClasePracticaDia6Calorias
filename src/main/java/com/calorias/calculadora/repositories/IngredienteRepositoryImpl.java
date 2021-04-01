@@ -1,6 +1,7 @@
 package com.calorias.calculadora.repositories;
 
 import com.calorias.calculadora.dto.IngredienteDTO;
+import com.calorias.calculadora.exceptionhandler.IngredientNotFound;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,9 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class IngredienteRepositoryImpl implements IngredienteRepository{
+
+public class IngredienteRepositoryImpl implements IngredienteRepository {
     @Override
-    public void getIngredientes(List<IngredienteDTO>  ingredientes) {
+    public void getIngredientes(List<IngredienteDTO> ingredientes) throws IngredientNotFound {
         List<IngredienteDTO> ingredientesDTO = null;
         ingredientesDTO = cargarBase();
         if (ingredientesDTO != null) {
@@ -26,6 +28,8 @@ public class IngredienteRepositoryImpl implements IngredienteRepository{
                 Optional<IngredienteDTO> item = ingredientesDTO.stream().filter(ingredienteDTO -> ingredienteDTO.getName().equals(ingredientes.get(finalI).getName())).findFirst();
                 if (item.isPresent()) {
                     ingredientes.get(i).setCalories(item.get().getCalories());
+                } else {
+                    throw new IngredientNotFound(ingredientes.get(finalI).getName());
                 }
             }
         }
